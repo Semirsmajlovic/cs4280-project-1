@@ -1,59 +1,68 @@
-/*
- * main.cpp by Pascal Odijk 2/24/2021
- * P1 CS4280 Professor Hauschild
- *
- * This file contains the main function for P1. The project starts by taking input in three different ways: file specification, redirection, or through keyboard input followed by ctrl+d (simulated EOF).
- * If the user starts the program with ./scanner, this will trigger the keyboard input form, ./scanner < fileName.ext will trigger redirection, and ./scanner fileName will trigger file input. If more than one
- * argument is encountered, the program will output an error message. This function will then call the function testScanner which is the driver for the project 1 scanner.
- */
-
+// Define our includes
 #include <iostream>
 #include <fstream>
 #include "testScanner.h"
 
 using namespace std;
 
-int main(int argc, char *argv[]) {
-	string fileName;
-	ifstream ifile;
+// Main
+int main(int argc, char *argv[]) 
+{
+	// Define variables
+	string file_name;
+	ifstream invoked_file;
 
-	if(argc == 1){ // Handles program initialization of ./P1 (keyboard) or ./P1 < fileName.ext (redirection)
+	// Throw error if more than two arguments are passed
+	if (argc > 2) {
+		cout << "Error: Please use one of the following formats: ./scanner file_name or ./scanner < file_name.ext\n";
+		return 1;
+		
+	// Handle our single ./scanner temp append call
+	} else if (argc == 2) {
+		file_name = argv[1];
+		file_name.append(".sp2022");
+
+	// Handle our single argument and execute
+	} else if (argc == 1) {
+
+		// Invoke try/catch conditional
 		try {
-			string userInput;
-			ofstream tempFile;
+			// Set our variables
+			string client_input;
+			ofstream temporary_file;
 
-			fileName = "temp.sp2021";
+			// Define our temporary file
+			file_name = "temp.sp2022";
 
-			tempFile.open(fileName.c_str());
+			// Open our temporary file
+			temporary_file.open(
+				file_name.c_str()
+			);
 
-			while(getline(cin, userInput)) {
-				tempFile << userInput << "\n";
+			// Create our loop
+			while (getline(cin, client_input)) {
+				temporary_file << client_input << "\n";
 			}
 
-			tempFile.close();
+			// Terminate loop and close temporary file
+			temporary_file.close();
 
-		} catch(const ifstream::failure& e){
-			cout << "Error file not found\n";
+		// Handle our catch on non-existant file
+		} catch (const ifstream::failure &e) {
+			cout << "Error: The file could not be found, please make sure that the correct file name is provided.\n";
 			return 1;
 		}
-
-	} else if(argc == 2){ // Handles program initialization of ./P1 fileName (read from file)
-		fileName = argv[1];
-		fileName.append(".sp2021");
-
-	} else if(argc > 2){ // Error if more than one argument is entered
-		cout << "ERROR: Too many arguments\n";
-		cout << "USAGE: ./scanner [keyboard input], or ./scanner fileName, or ./scanner < fileName.ext\n";
-		return 1;
 	}
 
-	// Open input file and call testScanner
-	ifile.open(fileName.c_str());
-	testScanner(ifile);
+	// Call our testScanner file
+	invoked_file.open(
+		file_name.c_str()
+	);
+	testScanner(invoked_file);
 
 	// Close input file
-	cout << "\nNow closing file...\n";
-	ifile.close();
+	cout << "\nOur file execution will now be terminated.\n";
+	invoked_file.close();
 
 	return 0;
 }
