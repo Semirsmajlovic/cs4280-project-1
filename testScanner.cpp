@@ -1,12 +1,4 @@
-/*
- * testScanner.cpp by Pascal Odijk 2/24/2021
- * P1 CS4280 Professor Hauschild
- *
- * This file contains the testScanner function which is the driver for the actual scanner in scanner.cpp. The function testScanner passes the scanner one character at a time, once tokenized,
- * they are returned to the testScanner and are then printed in the format {tokenID, instance, and line number}. Additionally, testScanner handles the error if an identifier begins with a capital letter as well
- * as if a token is specified as an error in the scanner. The tokenNames array holds the string representation for the tokenID and is displayed in the token triplet.
- */
-
+// Define our includes
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -15,8 +7,8 @@
 
 using namespace std;
 
-// Token names to output
-string tokenNames[] = {
+// Define our token names
+string token_names[] = {
 	"End of File",
 	"Error",
 	"Identifier",
@@ -59,29 +51,37 @@ string tokenNames[] = {
 	"Close Bracket"
 };
 
-// Driver for the scanner
-void testScanner(ifstream& ifile){
-	token tk;
-	int lineNum = 1;
+// Scanner's Driver
+void testScanner(ifstream& ifile)
+{
+	// Define our variables
+	token token;
+	int line_number = 1;
 
-	while(ifile) {
-		tk = scanner(ifile, lineNum);
+	// Set our line break
+	cout << "\n";
 
-		if(tokenNames[tk.tkIdentifier] == "Identifier" && isalpha(tk.tkName[0])) {
-			if(tk.tkName[0] == toupper(tk.tkName[0])) {
-				cout << "SCANNER ERROR: invalid identifier " << tk.tkName << " at line " << tk.lineNum << "\n";
-				cout << "Identifiers cannot begin with a capital letter\n";
+	// Set our while loop
+	while (ifile) {
+
+		// Define our token variable
+		token = scanner(ifile, line_number);
+
+		// Check for token identifiers w/ token_name
+		if (token_names[token.token_identifier] == "Identifier" && isalpha(token.token_name[0])) {
+			if (token.token_name[0] == toupper(token.token_name[0])) {
+				cout << "Error: We have invalid characters " << token.token_name << " on line " << token.line_number << "\n";
+				cout << "Error Description: We can't begin identifiers with a capital letter.\n";
 
 				return;
 			}
 		}
-
-		if(tokenNames[tk.tkIdentifier] == "Error") {
+		
+		// Set our error turn handler or output our execution
+		if (token_names[token.token_identifier] == "Error") {
 			return;
-		}
-		else {
-				cout << "{ TokenID: " << tokenNames[tk.tkIdentifier] << ", Instance: "
-			     << tk.tkName << ", Line: " << tk.lineNum << " }\n";
+		} else {
+			cout << "[Line: " << token.line_number << "]\t[Token: " << token_names[token.token_identifier] << "]\t[Case: " << token.token_name << "]\n";
 		}
 	}
 

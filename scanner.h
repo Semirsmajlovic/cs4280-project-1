@@ -1,12 +1,4 @@
-/*
- * scanner.h by Pascal Odijk 2/24/2021
- * P1 CS4280 Professor Hauschild
- *
- * This file contains the function protoypes for the scanner, findColumn, and lookup in scanner.cpp. Additionally, the structures for lookupChar and lookupToken are specified in this file but the actual
- * characters and tokens declarations are found in scanner.cpp.
- *
- */
-
+// Define our includes
 #ifndef SCANNER_H
 #define SCANNER_H
 
@@ -15,23 +7,33 @@
 #include <fstream>
 #include "token.h"
 
-struct lookupChar {
+// Scanner prototype
+token scanner(
+	ifstream& ifile, 
+	int lineNum
+);
+
+// Prototype to lookup column on FSA table
+int column_lookup(
+	char nextChar
+);
+
+// Protoype to map token and keywords
+token lookup(
+	int value, 
+	string searchString
+);
+
+// Define our CLookup structure
+struct c_lookup {
 	char value;
 	int key;
 };
 
-struct lookupToken {
+// Define our TLookup structure
+struct t_lookup {
 	int key;
-	tokenID tkEnum;
+	TokenID token_enum;
 };
-
-// Scanner prototype
-token scanner(ifstream& ifile, int lineNum);
-
-// Prototype to lookup column on FSA table
-int findColumn(char nextChar);
-
-// Protoype to map token and keywords
-token lookup(int value, string searchString);
 
 #endif
